@@ -1,0 +1,35 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type ExcelQL {
+  status: String!
+}
+
+type LoginOutput {
+  """Generated access_token of the user"""
+  access_token: String!
+}
+
+type Mutation {
+  createTodo(colorcode: String!, description: String!, duedate: String!): ToDoQL!
+  login(password: String!, username: String!): LoginOutput!
+  signup(password: String!, passwordConfirm: String!, username: String!): LoginOutput!
+}
+
+type Query {
+  exportExcel: ExcelQL!
+  getTodos: [ToDoQL!]!
+  importExcel: ExcelQL!
+  sayHello: String!
+}
+
+type Subscription {
+  todoAdded: ToDoQL!
+}
+
+type ToDoQL {
+  colorCode: String!
+  description: String!
+  duedate: String!
+}
