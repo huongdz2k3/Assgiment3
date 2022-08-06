@@ -1,16 +1,15 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Date } from "mongoose";
 
 export type TodoDocument = Todo & Document
 
 @Schema()
 export class Todo {
     @Prop()
-    id: string
-    @Prop()
     description: string
-    @Prop()
+    @Prop({ type: Date })
     duedate: string
-    @Prop()
+    @Prop({ required: false, default: '' })
     colorcode: string
 }
 

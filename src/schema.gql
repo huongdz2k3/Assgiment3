@@ -9,11 +9,20 @@ type ExcelQL {
 type LoginOutput {
   """Generated access_token of the user"""
   access_token: String!
+
+  """Generated refresh_token of the user"""
+  refresh_token: String!
+}
+
+type LogoutOutput {
+  status: String!
 }
 
 type Mutation {
   createTodo(colorcode: String!, description: String!, duedate: String!): ToDoQL!
   login(password: String!, username: String!): LoginOutput!
+  logout: LogoutOutput!
+  refreshToken: LoginOutput!
   signup(password: String!, passwordConfirm: String!, username: String!): LoginOutput!
 }
 
@@ -29,7 +38,7 @@ type Subscription {
 }
 
 type ToDoQL {
-  colorCode: String!
+  colorcode: String!
   description: String!
   duedate: String!
 }

@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { User } from "src/User/user.model";
@@ -9,9 +9,7 @@ export class TodoService {
     constructor(@InjectModel('Todo') private readonly todoModel: Model<Todo>, @InjectModel('User') private readonly userModel: Model<User>) { }
     async createTodo(description: string, duedate: string, colorcode: string, username: string) {
         const todo = await this.todoModel.create({ description: description, duedate: duedate, colorcode: colorcode })
-        const user = await this.userModel.findOne({ username: username })
-        user.lists.push(todo)
-        await user.save()
+        await this.userModel.updateOne({ username: username }, { $addToSet: { lists: todo } })
         return todo
     }
 
@@ -19,6 +17,7 @@ export class TodoService {
         const user = await this.userModel.findOne({ username: username })
         return user.lists
     }
+
 
 
 }

@@ -7,5 +7,5 @@ export class ToDoQL {
     @Field()
     duedate: string
     @Field()
-    colorCode: string
+    colorcode: string
 }

@@ -7,12 +7,14 @@ export type UserDocument = User & Document
 export class User {
     @Prop()
     id: string
-    @Prop()
+    @Prop({ unique: true })
     username: string
     @Prop()
     password: string
     @Prop({ default: [] })
     lists: Todo[]
+    @Prop()
+    refreshToken: string
 }
 const userSchema = SchemaFactory.createForClass(User)
 userSchema.pre('save', async function (next) {
