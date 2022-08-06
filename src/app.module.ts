@@ -42,7 +42,7 @@ async function decoded(token) {
       console.log(connection.context)
     },
   }), UserModule, AuthModule, TodoModule,
-  MongooseModule.forRoot(''),
+  MongooseModule.forRoot('mongodb+srv://huongdz2003:Huongdzcogisai2003@nodeexpressprojects.ybqix.mongodb.net/TodoList'),
   BullModule.forRoot({
     redis: {
       host: 'localhost',
