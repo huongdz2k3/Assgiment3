@@ -6,8 +6,9 @@ import { userSchema } from "src/User/user.model";
 import { UserModule } from "src/User/user.module";
 import { AuthService } from "./auth.service";
 import { jwtConstants } from "./constants";
-import { JwtStrategy } from "./jwt.strategy";
-import { LocalStrategy } from "./local.strategy";
+import { JwtStrategy } from "./strategy/jwt.strategy";
+import { LocalStrategy } from "./strategy/local.strategy";
+import { RtStrategy } from "./strategy/rt.strategy";
 
 @Module({
     imports: [MongooseModule.forFeature([{ name: 'User', schema: userSchema }]),
@@ -15,10 +16,10 @@ import { LocalStrategy } from "./local.strategy";
         PassportModule,
     JwtModule.register({
         secret: jwtConstants.secret,
-        signOptions: { expiresIn: '90d' },
+        signOptions: { expiresIn: '900s' },
     }),
     ],
-    providers: [AuthService, JwtStrategy, LocalStrategy],
+    providers: [AuthService, JwtStrategy, LocalStrategy, RtStrategy],
     exports: [AuthService]
 })
 export class AuthModule { }

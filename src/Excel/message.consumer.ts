@@ -1,6 +1,6 @@
 import { Process, Processor } from "@nestjs/bull";
 import { Job } from "bull";
-import { AppService } from "./app.service";
+import { AppService } from "./excel.service";
 
 @Processor('message-queue')
 export class MessageConsumer {

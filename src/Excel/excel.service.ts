@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 
 import { Workbook } from 'exceljs';
 import { resolve } from 'path';
+import { Todo } from 'src/Todo/todo.model';
 // import * as tmp from '/'
-import { AuthService } from './Auth/auth.service';
-import { TodoService } from './Todo/todo.service';
+import { AuthService } from '../Auth/auth.service';
+import { TodoService } from '../Todo/todo.service';
 @Injectable()
 export class AppService {
   constructor(private authService: AuthService, private todoService: TodoService) { }
@@ -55,8 +56,8 @@ export class AppService {
     rows.unshift(sheet_name) // add name sheet
     sheet.addRows(rows) // add rows to row
     this.styleSheet(sheet, rows)
-    await book.xlsx.writeFile('./src/Excel/TodoListExport.xlsx').then(_ => {
-      resolve('./src/Excel/TodoListExport.xlsx')
+    await book.xlsx.writeFile(`./src/Excel/${username}.xlsx`).then(_ => {
+      resolve(`./src/Excel/${username}.xlsx`)
     })
     return {
       status: 'success'
@@ -65,27 +66,23 @@ export class AppService {
 
   async importExcel(username: string) {
     let book = new Workbook()
-    const lists = (await this.authService.getUser(username)).lists
-    let data = []
-    await book.xlsx.readFile('./src/Excel/TodoListExport.xlsx').then(() => {
+    const user = await this.authService.getUser(username)
+    const lists = user.lists
+
+    await book.xlsx.readFile(`./src/Excel/${username}.xlsx`).then(() => {
       let sheet = book.getWorksheet('sheet')
-      for (let i = lists.length + 1; i <= sheet.actualRowCount; i++) {
-        let task = {
+      for (let i = lists.length + 2; i <= sheet.actualRowCount; i++) {
+        const date = new Date(sheet.getRow(i).getCell(2).toString())
+        console.log()
+        let task: Todo = {
           description: sheet.getRow(i).getCell(1).toString(),
           duedate: sheet.getRow(i).getCell(2).toString(),
           colorcode: sheet.getRow(i).getCell(3).toString()
         }
-        data.push(task)
+        lists.push(task)
       }
-
     });
-
-    const dataWait = []
-    for (let i = 1; i < data.length; i++) {
-      let task = data[i]
-      dataWait.push(this.todoService.createTodo(task.description, task.duedate, task.colorcode, username))
-    }
-    await Promise.all(dataWait)
+    await user.save()
 
     return {
       status: 'success'
