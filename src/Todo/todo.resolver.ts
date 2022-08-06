@@ -1,7 +1,8 @@
 import { BadRequestException, UseGuards } from "@nestjs/common";
-import { Args, Mutation, Resolver, Query, Subscription } from "@nestjs/graphql";
+import { Args, Mutation, Resolver, Query, Subscription, Context } from "@nestjs/graphql";
 import { PubSub } from "graphql-subscriptions";
 import { JwtAuthGuard } from "src/Auth/guard/jwt-auth.guard";
+import { SubAuthGuard } from "src/Auth/guard/sub-auth.guard";
 import { CurrentUser } from "src/User/user.decorator.graphql";
 import { ToDoQL } from "./todo.schema";
 import { TodoService } from "./todo.service";
@@ -32,13 +33,13 @@ export class TodoResolver {
         let username = user.username
         return await this.todoService.getTodos(username)
     }
-    @UseGuards(JwtAuthGuard)
-    @Subscription(() => ToDoQL, {
-        filter: (payload, variables) => payload.todoAdded.user.username === variables.user.username
-    })
 
-    todoAdded(@CurrentUser() user: { username: string, rt: string }) {
-        console.log(user)
+    @UseGuards(SubAuthGuard)
+    @Subscription(() => ToDoQL,
+        { filter: (payload, variables) => payload.todoAdded.context === variables.context }
+    )
+    todoAdded(@Context() context) {
+        console.log(context)
         return this.pubSub.asyncIterator('todoAdded')
     }
     validateColor(colorcode: string) {
@@ -48,8 +49,8 @@ export class TodoResolver {
         for (let i = 1; i < arr.length; i++) {
             let check = false
             const asciicode = colorcode.charCodeAt(i)
-            if (asciicode > 48 && asciicode < 57) check = true
-            else if (asciicode > 65 && asciicode < 90) check = true
+            if (asciicode >= 48 && asciicode <= 57) check = true
+            else if (asciicode >= 65 && asciicode <= 90) check = true
             if (!check) return false
         }
         return true
