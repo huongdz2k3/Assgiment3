@@ -13,7 +13,13 @@ export class AppService {
     // set the width of each column
 
     for (let i = 1; i < rows.length; i++) {
-      const color = rows[i][2]
+      function removeCharAt(color, i) {
+        let tmp = color.split('')
+        tmp.splice(i - 1, 1)
+        return tmp.join('')
+      }
+      let color = ('' + rows[i][2]).slice(1)
+      color = removeCharAt(color, 0)
       sheet.getCell(`B${i + 1}`).fill = {
         type: 'pattern',
         pattern: 'solid',
@@ -39,6 +45,7 @@ export class AppService {
       right: { style: 'thin', color: { argb: 'FFFFFF' } }
     }
   }
+
   async exportExcel(username: string) {
     const list = (await this.authService.getUser(username)).lists
     let rows = []
@@ -72,7 +79,6 @@ export class AppService {
     await book.xlsx.readFile(`./src/Excel/${username}.xlsx`).then(() => {
       let sheet = book.getWorksheet('sheet')
       for (let i = lists.length + 2; i <= sheet.actualRowCount; i++) {
-        const date = new Date(sheet.getRow(i).getCell(2).toString())
         console.log()
         let task: Todo = {
           description: sheet.getRow(i).getCell(1).toString(),
@@ -83,7 +89,6 @@ export class AppService {
       }
     });
     await user.save()
-
     return {
       status: 'success'
     }

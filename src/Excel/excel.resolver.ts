@@ -15,7 +15,7 @@ export class AppResolver {
     @Query(() => ExcelQL)
     @UseInterceptors(FileInterceptor('file'))
     async exportExcel(@CurrentUser() user: { username: string, rt: string }, @UploadedFile() file: Express.Multer.File) {
-        console.log(file);
+
         await this.messageProducerService.export(user.username)
         return {
             status: 'success'
