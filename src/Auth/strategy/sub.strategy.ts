@@ -12,7 +12,7 @@ export class SubStrategy extends PassportStrategy(Strategy, 'sub') {
     }
 
     async validate(payload: any) {
-        console.log(payload) // does not run
+
         return { username: payload };
     }
 

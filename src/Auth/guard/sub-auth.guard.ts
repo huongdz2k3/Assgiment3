@@ -6,7 +6,7 @@ import { AuthGuard } from '@nestjs/passport';
 export class SubAuthGuard extends AuthGuard('sub') {
     getRequest(context: ExecutionContext) {
         const ctx = GqlExecutionContext.create(context);
-        console.log(ctx.getContext())
+
         return ctx.getContext();
     }
 }

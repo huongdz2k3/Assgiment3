@@ -38,7 +38,6 @@ export class UserResolver {
     @Mutation(() => LoginOutput)
     async refreshToken(@CurrentUser() user: { username: string, rt: string }) {
         // const user = req.user
-        console.log(user.username)
         return await this.authService.refreshToken(user.username, user.rt)
     }
     @Query(() => String)
