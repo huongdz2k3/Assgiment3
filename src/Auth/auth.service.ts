@@ -46,6 +46,8 @@ export class AuthService {
         if (!user) {
             throw new BadRequestException('User does not exist')
         }
+        console.log(rt)
+        console.log(user.refreshToken)
         const rtMatches = await bcrypt.compare(rt, user.refreshToken)
         if (!rtMatches) {
             throw new BadRequestException('Access Denied')

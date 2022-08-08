@@ -79,7 +79,6 @@ export class AppService {
     await book.xlsx.readFile(`./src/Excel/${username}.xlsx`).then(() => {
       let sheet = book.getWorksheet('sheet')
       for (let i = lists.length + 2; i <= sheet.actualRowCount; i++) {
-        console.log()
         let task: Todo = {
           description: sheet.getRow(i).getCell(1).toString(),
           duedate: sheet.getRow(i).getCell(2).toString(),
