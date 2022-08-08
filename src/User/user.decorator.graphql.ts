@@ -7,10 +7,9 @@ export const CurrentUser = createParamDecorator(
         const arr = ctx.getContext().req.rawHeaders
         let rt = ''
         for (let i = 0; i < arr.length; i++) {
-            if (arr[i] === 'Refresh_Token') rt = arr[i + 1]
+            if (arr[i] === 'Refresh_token') rt = arr[i + 1]
 
         }
-
         const user = {
             username: ctx.getContext().req.user.username,
             rt: rt
